@@ -1,5 +1,5 @@
 import pandas as pd
-from process_data import load_data, clean_data, save_data
+from .process_data import load_data, clean_data, save_data
 
 
 def test_load_data_is_returning_two_entities():
