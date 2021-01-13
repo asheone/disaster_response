@@ -1,5 +1,7 @@
 # Disaster Response Pipeline Project
 
+[![Build Status](https://travis-ci.com/asheone/disaster_response.svg?token=YapLykbwGDS2RPRSsgz8&branch=main)](https://travis-ci.com/asheone/disaster_response)
+
 ### Instructions:
 1. Run the following commands in the project's root directory to set up your database and model.
 
