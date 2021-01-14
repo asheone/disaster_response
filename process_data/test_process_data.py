@@ -3,7 +3,7 @@ import os
 import os.path
 from process_data.process_data import load_data, clean_data, save_data
 
-directory = os.getcwd()
+directory = os.path()
 
 def test_if_the_file_exsist():
 
