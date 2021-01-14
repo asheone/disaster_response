@@ -3,11 +3,12 @@ import os
 import os.path
 from process_data.process_data import load_data, clean_data, save_data
 
-directory = os.path.abspath(os.getcwd())
+directory = os.path.abspath(os.getcwd())  + "/process_data/"
+print(directory)
 
 def test_if_the_file_exsist():
 
-    filename = ["disaster_messages.csv", "categories.csv"]
+    filename = ["disaster_messages.csv", "disaster_categories.csv"]
     for file in filename:
         if(os.path.isfile(file)):
           print("File {0} Exists!!".format(file))
@@ -15,7 +16,7 @@ def test_if_the_file_exsist():
           print("File {0} does not exists!!".format(file))
 
 def test_load_data_is_returning_two_entities():
-    assert len(load_data("{0}/disaster_messages.csv".format(directory), "{0}/categories.csv".format(directory)))==2
+    assert len(load_data("{0}/disaster_messages.csv".format(directory), "{0}/disaster_categories.csv".format(directory)))==2
 
 
 def test_load_data_is_dataframe():

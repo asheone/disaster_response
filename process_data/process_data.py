@@ -25,7 +25,7 @@ def clean_data(df):
     ids = categories.drop(columns=['categories'])
 
     #Create a dataframe of the 36 individual category columns
-    categories_df = pd.read_csv('categories.csv')
+    categories_df = categories
     categories = categories_df['categories'].str.split(pat=";", n=0, expand=True)
 
     #Merge datasets
