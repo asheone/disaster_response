@@ -9,7 +9,7 @@ def test_if_the_file_exsist():
 
     filename = ["disaster_messages.csv", "categories.csv"]
     for file in filename:
-        if(os.path.isfile(/filepath/file)):
+        if(os.path.isfile(file)):
           print("File {0} Exists!!".format(file))
         else:
           print("File {0} does not exists!!".format(file))
