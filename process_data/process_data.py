@@ -61,8 +61,9 @@ def clean_data(df):
 
 
 def save_data(df, database_filename):
-    engine = create_engine('sqlite:///{0}.db'.format(database_filename))
+    engine = create_engine('sqlite:///{0}'.format(database_filename))
     df.to_sql('{0}'.format(database_filename), engine, index=False)
+    return df
 
 
 def main():
