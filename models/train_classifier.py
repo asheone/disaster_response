@@ -1,16 +1,47 @@
 import sys
 
+import pandas as pd
+import numpy as np
+from sqlalchemy import create_engine
+import re
+
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import confusion_matrix
+from sklearn.metrics import roc_auc_score
+from sklearn.metrics import classification_report
+from sklearn.datasets import make_multilabel_classification
+from sklearn.model_selection import KFold
+from sklearn.multioutput import MultiOutputClassifier
+from sklearn.pipeline import Pipeline
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.model_selection import GridSearchCV
+
+from nltk.tokenize import word_tokenize
+from nltk.corpus import stopwords
+
 #'sqlite:///Disaster.db'
 def load_data(database_filepath):
-    engine = create_engine(database_filepath)
+    engine = create_engine("sqlite:///" + database_filepath)
     return pd.read_sql_table(
-        table_name='Disaster',
+        table_name='DisasterResponse.db',
         con=engine
     )
 
+# def tokenize(df, text_column_name):
+def normalize(df, text_column_name):
+    """
+    This function takes the dataframe loaded with the load_data function, and the column name to be normalized.
+    :param df: The input dataframe (dataframe)
+    :param text_column_name: The list of column names to process (list)
+    :return: The normalized dataframe (dataframe)
+    """
+    for column in text_column_name:
+        # Lower the column content
+        df[column] = df[column].str.lower()
 
-def tokenize(text):
-    pass
+        # Remove punctuation
+        df[column] = df[column].str.replace(r"[^a-zA-Z0-9]", " ")
+    return df
 
 
 def build_model():
