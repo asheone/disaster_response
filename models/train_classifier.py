@@ -3,29 +3,28 @@ import sys
 import pandas as pd
 import numpy as np
 from sqlalchemy import create_engine
-import re
+from pickle import dump
+from datetime import date
 
 from sklearn.model_selection import train_test_split
-from sklearn.metrics import confusion_matrix
-from sklearn.metrics import roc_auc_score
-from sklearn.metrics import classification_report
-from sklearn.datasets import make_multilabel_classification
-from sklearn.model_selection import KFold
 from sklearn.multioutput import MultiOutputClassifier
-from sklearn.pipeline import Pipeline
-from sklearn.neighbors import KNeighborsClassifier
-from sklearn.model_selection import GridSearchCV
+from sklearn.pipeline import Pipeline, FeatureUnion
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.feature_extraction.text import CountVectorizer, TfidfTransformer
 
-from nltk.tokenize import word_tokenize
-from nltk.corpus import stopwords
 
-#'sqlite:///Disaster.db'
 def load_data(database_filepath):
     engine = create_engine("sqlite:///" + database_filepath)
-    return pd.read_sql_table(
+    df = pd.read_sql_table(
         table_name='DisasterResponse.db',
         con=engine
     )
+
+    X = df['message']
+    Y = df.drop(columns=['message', 'original', 'genre']).set_index('id')
+
+    return X, Y
+
 
 # def tokenize(df, text_column_name):
 def normalize(df, text_column_name):
@@ -41,27 +40,46 @@ def normalize(df, text_column_name):
 
         # Remove punctuation
         df[column] = df[column].str.replace(r"[^a-zA-Z0-9]", " ")
+
     return df
 
 
 def build_model():
-    pass
+    pipeline = Pipeline([
+        ('features', FeatureUnion([
+
+            ('text_pipeline', Pipeline([
+                ('vect', CountVectorizer(stop_words='english', max_features=1000)),
+                ('tfidf', TfidfTransformer())
+            ])),
+        ])),
+
+        ('clf', MultiOutputClassifier(RandomForestClassifier(n_estimators=500,
+                                                             class_weight='balanced_subsample',
+                                                             warm_start=False)))
+    ])
+
+    return pipeline
 
 
-def evaluate_model(model, X_test, Y_test, category_names):
-    pass
+def evaluate_model(model, X_test, Y_test):
+    y_pred = model.predict(X_test)
+    label_accuracy = np.mean(y_pred == Y_test)
+    print("Labels accuracy:\n", label_accuracy)
+    print("Mean labels accuracy:", np.mean(label_accuracy))
 
 
 def save_model(model, model_filepath):
-    pass
+    filename = '{0}_{1}.pkl'.format(model_filepath, date.today())
+    dump(model, open(filename, 'wb'))
 
 
 def main():
     if len(sys.argv) == 3:
         database_filepath, model_filepath = sys.argv[1:]
         print('Loading data...\n    DATABASE: {}'.format(database_filepath))
-        X, Y, category_names = load_data(database_filepath)
-        X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=0.2)
+        X, Y = load_data(database_filepath)
+        X_train, X_test, Y_train, Y_test = train_test_split(X[0:5001], Y[0:5001], test_size=0.2)
 
         print('Building model...')
         model = build_model()
@@ -70,7 +88,7 @@ def main():
         model.fit(X_train, Y_train)
 
         print('Evaluating model...')
-        evaluate_model(model, X_test, Y_test, category_names)
+        evaluate_model(model, X_test, Y_test)
 
         print('Saving model...\n    MODEL: {}'.format(model_filepath))
         save_model(model, model_filepath)
@@ -78,9 +96,9 @@ def main():
         print('Trained model saved!')
 
     else:
-        print('Please provide the filepath of the disaster messages database '\
-              'as the first argument and the filepath of the pickle file to '\
-              'save the model to as the second argument. \n\nExample: python '\
+        print('Please provide the filepath of the disaster messages database '
+              'as the first argument and the filepath of the pickle file to '
+              'save the model to as the second argument. \n\nExample: python '
               'train_classifier.py ../data/DisasterResponse.db classifier.pkl')
 
 
