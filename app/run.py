@@ -8,7 +8,7 @@ from nltk.tokenize import word_tokenize
 from flask import Flask
 from flask import render_template, request, jsonify
 from plotly.graph_objs import Bar
-import joblib #from sklearn.externals.joblib
+import joblib
 from sqlalchemy import create_engine
 
 app = Flask(__name__)
@@ -27,11 +27,11 @@ def tokenize(text):
 
 
 # load data
-engine = create_engine('sqlite:///../data/YourDatabaseName.db')
-df = pd.read_sql_table('YourTableName', engine)
+engine = create_engine('sqlite:///../process_data/DisasterResponse.db')
+df = pd.read_sql_table('DisasterResponse.db', engine)
 
 # load model
-model = joblib.load("../models/your_model_name.pkl")
+model = joblib.load("../classifier_2021-01-24.pkl")
 
 
 # index webpage displays cool visuals and receives user input text for model
@@ -75,7 +75,7 @@ def index():
 
 
 # web page that handles user query and displays model results
-@app.route('/go')
+@app.route('/go', methods=["POST", "GET"])
 def go():
     # save user input in query
     query = request.args.get('query', '')
