@@ -71,7 +71,7 @@ def evaluate_model(model, X_test, Y_test):
 
 def save_model(model, model_filepath):
     filename = '{0}_{1}.pkl'.format(model_filepath, date.today())
-    dump(model, open(filename, 'wb'))
+    return dump(model, open(filename, 'wb'))
 
 
 def main():
