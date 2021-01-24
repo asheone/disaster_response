@@ -5,6 +5,7 @@ import numpy as np
 from sqlalchemy import create_engine
 from pickle import dump
 from datetime import date
+import joblib
 
 from sklearn.model_selection import train_test_split
 from sklearn.multioutput import MultiOutputClassifier
@@ -49,12 +50,12 @@ def build_model():
         ('features', FeatureUnion([
 
             ('text_pipeline', Pipeline([
-                ('vect', CountVectorizer(stop_words='english', max_features=1000)),
+                ('vect', CountVectorizer(stop_words='english', max_features=1800)),
                 ('tfidf', TfidfTransformer())
             ])),
         ])),
 
-        ('clf', MultiOutputClassifier(RandomForestClassifier(n_estimators=500,
+        ('clf', MultiOutputClassifier(RandomForestClassifier(n_estimators=50,
                                                              class_weight='balanced_subsample',
                                                              warm_start=False)))
     ])
@@ -71,7 +72,7 @@ def evaluate_model(model, X_test, Y_test):
 
 def save_model(model, model_filepath):
     filename = '{0}_{1}.pkl'.format(model_filepath, date.today())
-    return dump(model, open(filename, 'wb'))
+    return joblib.dump(model, open(filename, 'wb'), compress=3)
 
 
 def main():
@@ -79,7 +80,7 @@ def main():
         database_filepath, model_filepath = sys.argv[1:]
         print('Loading data...\n    DATABASE: {}'.format(database_filepath))
         X, Y = load_data(database_filepath)
-        X_train, X_test, Y_train, Y_test = train_test_split(X[0:5001], Y[0:5001], test_size=0.2)
+        X_train, X_test, Y_train, Y_test = train_test_split(X[0:15000], Y[0:15000], test_size=0.2)
 
         print('Building model...')
         model = build_model()
