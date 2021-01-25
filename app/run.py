@@ -31,7 +31,7 @@ engine = create_engine('sqlite:///../process_data/DisasterResponse.db')
 df = pd.read_sql_table('DisasterResponse.db', engine)
 
 # load model
-model = joblib.load("../classifier_2021-01-24.pkl")
+model = joblib.load("../classifier_2021-01-25.pkl")
 
 
 # index webpage displays cool visuals and receives user input text for model
