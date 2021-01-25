@@ -3,6 +3,16 @@
 [![Build Status](https://travis-ci.com/asheone/disaster_response.svg?token=YapLykbwGDS2RPRSsgz8&branch=main)](https://travis-ci.com/asheone/disaster_response)
 [![codecov](https://codecov.io/gh/asheone/disaster_response/branch/main/graph/badge.svg?token=2qKmb3B5PA)](https://codecov.io/gh/asheone/disaster_response)</br>
 
+<b>TODO:</br>
+1. Add ###Brief project description
+2. Add the docstrings to the functions
+3. Add the normalize, lemmatize, and tokenize into the train_claasifier.py file
+4. Explain in the description that GridSearch was used for finding the best model, but then only the best model is used in the resulting model.
+5. Output the f1 score, precision and recall for each category
+6. Include at least two visualizations using data from the SQLite database in the main page
+
+
+
 ### Instructions:
 1. Run the following commands in the project's root directory to set up your database and model.
 
