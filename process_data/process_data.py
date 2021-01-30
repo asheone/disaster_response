@@ -1,7 +1,7 @@
 import sys
 import pandas as pd
-import numpy as np
 from sqlalchemy import create_engine
+
 
 def load_data(messages_filepath, categories_filepath):
     """
@@ -17,29 +17,34 @@ def load_data(messages_filepath, categories_filepath):
 
 
 def clean_data(df):
-    #Assign the dataframes to separate variables
+    """
+    This function takes two dataframe objects and performs multiple cleaning actions and returns the dataframe
+    :param df: The input dataframes (df)
+    :return: The cleaned, merged dataframe (df)
+    """
+    # Assign the dataframes to separate variables
     messages = df[0]
     categories = df[1]
 
-    #Perform cleaning on the categories dataframe
+    # Perform cleaning on the categories dataframe
     ids = categories.drop(columns=['categories'])
 
-    #Create a dataframe of the 36 individual category columns
+    # Create a dataframe of the 36 individual category columns
     categories_df = categories
     categories = categories_df['categories'].str.split(pat=";", n=0, expand=True)
 
-    #Merge datasets
+    # Merge datasets
     df = ids.merge(categories, left_index=True, right_index=True)
     categories = df
 
-    #Select the first row of the categories dataframe
+    # Select the first row of the categories dataframe
     row = [i for i in df.iloc[0]]
 
-    #Extract a list of new column names for categories
-    category_colnames = [i.replace("-0","").replace("-1","") for i in row[1:]]
+    # Extract a list of new column names for categories
+    category_colnames = [i.replace("-0", "").replace("-1", "") for i in row[1:]]
     category_colnames.insert(0, 'id')
 
-    #Rename the columns of `categories`
+    # Rename the columns of `categories`
     categories.columns = category_colnames
 
     for column in categories:
@@ -48,19 +53,25 @@ def clean_data(df):
             categories[column] = categories[column].str.split("-").str.get(1)
 
             # convert column from string to numeric
-            categories[column] =  categories[column].astype('int')
+            categories[column] = categories[column].astype('int')
         except AttributeError:
             continue
 
-    #Merge messages with the categories
+    # Merge messages with the categories
     df = messages.merge(categories, left_on='id', right_on='id')
 
-    #Drop duplicate messages
+    # Drop duplicate messages
     df.drop_duplicates(subset=['message'], keep='first', inplace=True)
     return df
 
 
 def save_data(df, database_filename):
+    """
+    Returns the database object
+    :param df: The input dataframe from the clean_data() function
+    :param database_filename: The database filename (str)
+    :return: The database saved object (.db)
+    """
     engine = create_engine('sqlite:///{0}'.format(database_filename))
     df.to_sql('{0}'.format(database_filename), engine, index=False)
     return df
@@ -84,11 +95,11 @@ def main():
         print('Cleaned data saved to database!')
 
     else:
-        print('Please provide the filepaths of the messages and categories '\
-              'datasets as the first and second argument respectively, as '\
-              'well as the filepath of the database to save the cleaned data '\
-              'to as the third argument. \n\nExample: python process_data.py '\
-              'disaster_messages.csv disaster_categories.csv '\
+        print('Please provide the filepaths of the messages and categories '
+              'datasets as the first and second argument respectively, as '
+              'well as the filepath of the database to save the cleaned data '
+              'to as the third argument. \n\nExample: python process_data.py '
+              'disaster_messages.csv disaster_categories.csv '
               'DisasterResponse.db')
 
 

@@ -69,6 +69,13 @@ def build_model():
 
 
 def evaluate_model(model, X_test, Y_test):
+    """
+    Returns the models evaluation metrics including the accuracy, F1 score etc
+    :param model: The model, output from the build_model() function
+    :param X_test: The test dataframe input for results evaluation
+    :param Y_test: The test dataframe response for results evaluation
+    :return: Prints out the evaluation metrics
+    """
     y_pred = model.predict(X_test)
     label_accuracy = np.mean(y_pred == Y_test)
     print("Labels accuracy:\n", label_accuracy)
@@ -76,6 +83,12 @@ def evaluate_model(model, X_test, Y_test):
 
 
 def save_model(model, model_filepath):
+    """
+    Saves and returns the pkl model file for further distribution
+    :param model: The model, output from the build_model() function
+    :param model_filepath: The model output filepath (str)
+    :return: The The model saved in the .pkl format
+    """
     filename = '{0}_{1}.pkl'.format(model_filepath, date.today())
     return joblib.dump(model, open(filename, 'wb'), compress=3)
 
