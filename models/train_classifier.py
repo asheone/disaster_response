@@ -15,6 +15,11 @@ from sklearn.feature_extraction.text import CountVectorizer, TfidfTransformer
 
 
 def load_data(database_filepath):
+    """
+    Returns the X and Y variables
+    :param database_filepath: The directory and the filepath (str)
+    :return: The X and Y variables dataframes (df)
+    """
     engine = create_engine("sqlite:///" + database_filepath)
     df = pd.read_sql_table(
         table_name='DisasterResponse.db',
