@@ -44,7 +44,8 @@ def test_save_data():
     try:
         assert isinstance(save_data(
             clean_data(
-                load_data("{0}/disaster_messages.csv".format(directory), "{0}/disaster_categories.csv".format(directory))),
+                load_data("{0}/disaster_messages.csv".format(directory), "{0}/disaster_categories.csv"
+                          .format(directory))),
             "DisasterResponse"),
             pd.DataFrame), "The function doesn't return a dataframe"
     except ValueError:
@@ -52,4 +53,4 @@ def test_save_data():
 
 
 def test_main_is_printing_results():
-    assert main()!=0
+    assert main() != 0
