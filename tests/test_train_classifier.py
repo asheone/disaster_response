@@ -3,8 +3,8 @@ import os.path
 from models.train_classifier import load_data, build_model, main
 from sklearn.pipeline import Pipeline
 
-directory = os.path.abspath(os.getcwd()).replace("/models", "") + "/process_data"
-db_name = "DisasterResponse.db"
+directory = os.path.abspath(os.getcwd()).replace("/tests", "") + ""
+db_name = "DisasterResponse"
 table_name = ""
 
 

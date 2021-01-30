@@ -1,7 +1,7 @@
 import pandas as pd
 import os
 import os.path
-from process_data.process_data import load_data, clean_data, save_data
+from process_data.process_data import load_data, clean_data, save_data, main
 
 directory = os.path.abspath(os.getcwd()) + "/process_data/"
 
@@ -46,3 +46,7 @@ def test_save_data():
             load_data("{0}/disaster_messages.csv".format(directory), "{0}/disaster_categories.csv".format(directory))),
         "DisasterResponse"),
         pd.DataFrame), "The function doesn't return a dataframe"
+
+
+def test_main_is_printing_results():
+    assert main()!=0
