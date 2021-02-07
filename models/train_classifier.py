@@ -1,17 +1,22 @@
+import re
 import sys
-
-import pandas as pd
-import numpy as np
-from sqlalchemy import create_engine
-from pickle import dump
 from datetime import date
-import joblib
+from functools import partial
 
+import joblib
+import nltk
+import pandas as pd
+from nltk.stem import WordNetLemmatizer
+from nltk.tokenize import word_tokenize
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.feature_extraction.text import CountVectorizer, TfidfTransformer
+from sklearn.metrics import classification_report
 from sklearn.model_selection import train_test_split
 from sklearn.multioutput import MultiOutputClassifier
 from sklearn.pipeline import Pipeline, FeatureUnion
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.feature_extraction.text import CountVectorizer, TfidfTransformer
+from sqlalchemy import create_engine
+
+nltk.download(['punkt', 'wordnet', 'averaged_perceptron_tagger'])
 
 
 def load_data(database_filepath):
@@ -32,22 +37,26 @@ def load_data(database_filepath):
     return X, Y
 
 
-# def tokenize(df, text_column_name):
-def normalize(df, text_column_name):
+def tokenize(text):
     """
     This function takes the dataframe loaded with the load_data function, and the column name to be normalized.
-    :param df: The input dataframe (dataframe)
-    :param text_column_name: The list of column names to process (list)
+    :param text: The input text from the dataframe (dataframe)
     :return: The normalized dataframe (dataframe)
     """
-    for column in text_column_name:
-        # Lower the column content
-        df[column] = df[column].str.lower()
+    url_regex = r'http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+'
+    detected_urls = re.findall(url_regex, text)
+    for url in detected_urls:
+        text = text.replace(url, "urlplaceholder")
 
-        # Remove punctuation
-        df[column] = df[column].str.replace(r"[^a-zA-Z0-9]", " ")
+    tokens = word_tokenize(text)
+    lemmatizer = WordNetLemmatizer()
 
-    return df
+    clean_tokens = []
+    for tok in tokens:
+        clean_tok = lemmatizer.lemmatize(tok).lower().strip().replace(r"[^a-zA-Z0-9]", " ")
+        clean_tokens.append(clean_tok)
+
+    return clean_tokens
 
 
 def build_model():
@@ -55,7 +64,8 @@ def build_model():
         ('features', FeatureUnion([
 
             ('text_pipeline', Pipeline([
-                ('vect', CountVectorizer(stop_words='english', max_features=1800)),
+                ('vect',
+                 CountVectorizer(tokenizer=partial(tokenize), stop_words='english', max_features=1800)),
                 ('tfidf', TfidfTransformer())
             ])),
         ])),
@@ -76,10 +86,9 @@ def evaluate_model(model, X_test, Y_test):
     :param Y_test: The test dataframe response for results evaluation
     :return: Prints out the evaluation metrics
     """
+
     y_pred = model.predict(X_test)
-    label_accuracy = np.mean(y_pred == Y_test)
-    print("Labels accuracy:\n", label_accuracy)
-    print("Mean labels accuracy:", np.mean(label_accuracy))
+    print(classification_report(Y_test, y_pred, digits=3, target_names=Y_test.columns))
 
 
 def save_model(model, model_filepath):

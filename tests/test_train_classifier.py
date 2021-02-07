@@ -4,7 +4,7 @@ from models.train_classifier import load_data, build_model, main
 from sklearn.pipeline import Pipeline
 
 directory = os.path.abspath(os.getcwd()).replace("/tests", "") + ""
-db_name = "DisasterResponse"
+db_name = "DisasterResponse.db"
 table_name = ""
 
 
