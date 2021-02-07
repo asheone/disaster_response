@@ -4,6 +4,8 @@ python:
   - "3.7"
   - "3.8"
 # command to install dependencies
+before script:
+  - easy_install distribute
 install:
   - pip install codecov
   - pip install -r requirements.txt
