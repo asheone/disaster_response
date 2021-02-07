@@ -25,10 +25,10 @@ The `tests` model holds all the unit tests.
 ### <b> Instructions: </b></br>
 1. Run the following commands in the project's root directory to set up your database and model.
 
-    - To run ETL pipeline that cleans data and stores in database, run this line in the `process_data` folder: </br>
-        `python process_data.py disaster_messages.csv disaster_categories.csv DisasterResponse.db`
+    - To run ETL pipeline that cleans data and stores in database, run this line in the `disaster_response` folder: </br>
+        `python process_data/process_data.py process_data/disaster_messages.csv process_data/disaster_categories.csv ./DisasterResponse`
     - To run ML pipeline that trains classifier and saves run this line in the `models` folder: </br>
-        `python train_classifier.py ../process_data/DisasterResponse.db ../classifier`
+        `python train_classifier.py ../DisasterResponse.db ../classifier`
     - To run the tests, run this line in the main folder: </br>
         `pytest`
 
