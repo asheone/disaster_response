@@ -5,9 +5,7 @@
 
 <b>TODO: </br>
 
-3. Add the tokenize into the train_claasifier.py file
 4. Explain in the description that GridSearch was used for finding the best model, but then only the best model is used in the resulting model.
-5. Output the f1 score, precision and recall for each category
 6. Include at least two visualizations using data from the SQLite database in the main page
 
 ### Project description </b></br>
