@@ -27,11 +27,11 @@ def tokenize(text):
 
 
 # load data
-engine = create_engine('sqlite:///../process_data/DisasterResponse.db')
-df = pd.read_sql_table('DisasterResponse.db', engine)
+engine = create_engine('sqlite:///DisasterResponse.db')
+dataframe = pd.read_sql_table('DisasterResponse', engine)
 
 # load model
-model = joblib.load("../classifier_2021-01-25.pkl")
+model = joblib.load("classifier_2021-02-07.pkl")
 
 
 # index webpage displays cool visuals and receives user input text for model
@@ -40,8 +40,13 @@ model = joblib.load("../classifier_2021-01-25.pkl")
 def index():
     # extract data needed for visuals
     # TODO: Below is an example - modify to extract data for your own visuals
-    genre_counts = df.groupby('genre').count()['message']
+    genre_counts = dataframe.groupby('genre').count()['message']
     genre_names = list(genre_counts.index)
+
+    new_df = dataframe.set_index(keys=['id'])
+    df = new_df.drop(columns=['message', 'original','genre'])
+    categories_counts = df.sum()
+    categories_names = df.columns
 
     # create visuals
     # TODO: Below is an example - modify to create your own visuals
@@ -63,6 +68,25 @@ def index():
                     'title': "Genre"
                 }
             }
+        },
+
+        {
+            'data': [
+                Bar(
+                    x=categories_names,
+                    y=categories_counts
+                )
+            ],
+
+            'layout': {
+                'title': 'Distribution of Categories',
+                'yaxis': {
+                    'title': "Count"
+                },
+                'xaxis': {
+                    'title': "Category"
+                }
+            }
         }
     ]
 
@@ -82,7 +106,7 @@ def go():
 
     # use model to predict classification for query
     classification_labels = model.predict([query])[0]
-    classification_results = dict(zip(df.columns[4:], classification_labels))
+    classification_results = dict(zip(dataframe.columns[4:], classification_labels))
 
     # This will render the go.html Please see that file. 
     return render_template(
