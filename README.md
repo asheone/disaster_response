@@ -5,9 +5,7 @@
 
 <b>TODO: </br>
 
-3. Add the tokenize into the train_claasifier.py file
 4. Explain in the description that GridSearch was used for finding the best model, but then only the best model is used in the resulting model.
-5. Output the f1 score, precision and recall for each category
 6. Include at least two visualizations using data from the SQLite database in the main page
 
 ### Project description </b></br>
@@ -32,7 +30,7 @@ The `tests` model holds all the unit tests.
     - To run the tests, run this line in the main folder: </br>
         `pytest`
 
-2. Run the following command in the app's directory to run your web app.
-    `python run.py`
+2. Run the following command in the main directory to run your web app.
+    ` python app/run.py`
 
 3. Go to http://0.0.0.0:3001/
