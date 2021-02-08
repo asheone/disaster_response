@@ -3,10 +3,6 @@
 [![Build Status](https://travis-ci.com/asheone/disaster_response.svg?token=YapLykbwGDS2RPRSsgz8&branch=main)](https://travis-ci.com/asheone/disaster_response)
 [![codecov](https://codecov.io/gh/asheone/disaster_response/branch/main/graph/badge.svg?token=2qKmb3B5PA)](https://codecov.io/gh/asheone/disaster_response)</br>
 
-<b>TODO: </br>
-
-4. Explain in the description that GridSearch was used for finding the best model, but then only the best model is used in the resulting model.
-6. Include at least two visualizations using data from the SQLite database in the main page
 
 ### Project description </b></br>
 This project is a submission for the Udacity Data Science course.
