@@ -133,7 +133,7 @@ tox==3.20.1
 tqdm==4.55.0
 traitlets==5.0.5
 transformers==2.4.1
-urllib3==1.26.3
+urllib3>=1.26.5
 virtualenv==20.0.35
 virtualenv-clone==0.5.4
 voila==0.2.4
